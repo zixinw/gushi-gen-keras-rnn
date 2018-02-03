@@ -6,11 +6,11 @@ from preprocessor import load_data
 from keras.utils import to_categorical
 
 MODEL_FILE_NAME = 'model.h5'
-CHECKPOINT_WEIGHTS_DIR = './cp_weights'
+CHECKPOINT_WEIGHTS_DIR = './weights'
 EPOCHS = 300
 BATCH_SIZE = 8
-NETWORK_SIZE = (2, 32)
-DATA_SIZE = 100
+NETWORK_SIZE = (2, 256)
+DATA_SIZE = 10000
 CELL_TYPE = 'gru'
 
 (x_train, y_train), VOC = load_data(limit=DATA_SIZE)
@@ -46,9 +46,13 @@ def train(model, x, y):
         # Keras callbacks
         checkpoint = ModelCheckpoint(CHECKPOINT_WEIGHTS_DIR + '/{epoch:d}.hdf5', save_weights_only=True, period=10)
         tensorboard = TensorBoard(batch_size=64)
+
+        def fit_model(initial_epoch):
+            nonlocal model
+
+        epoch = 0
         try:
             print('try restoring ...')
-            epoch = 1
             files = os.listdir(CHECKPOINT_WEIGHTS_DIR)
             if len(files) > 0:
                 # latest check points
@@ -56,19 +60,24 @@ def train(model, x, y):
                 epoch = latest_cp
                 print('from epoch:', epoch)
             model.load_weights(CHECKPOINT_WEIGHTS_DIR + '/{}.hdf5'.format(epoch))
-            model.fit(x, y, shuffle=True, batch_size=BATCH_SIZE, epochs=EPOCHS, initial_epoch=epoch,
-                      callbacks=[checkpoint, tensorboard])
         except OSError:
             print('weights not found, continuing start new training')
-            model.fit(x, y, batch_size=BATCH_SIZE, shuffle=True
+            pass
 
-                      , epochs=EPOCHS, callbacks=[checkpoint, tensorboard])
+        model.fit(x, y, shuffle=True, batch_size=BATCH_SIZE, epochs=EPOCHS, initial_epoch=epoch,
+                  callbacks=[checkpoint, tensorboard])
+
     except KeyboardInterrupt:
         print('')
         print('interrupted by user')
         pass
 
 
-model = build_graph()
-train(model, x_train, y_train)
-model.save(MODEL_FILE_NAME)
+def run():
+    model = build_graph()
+    train(model, x_train, y_train)
+    model.save(MODEL_FILE_NAME)
+
+
+if __name__ == '__main__':
+    run()

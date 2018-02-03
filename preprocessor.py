@@ -125,3 +125,37 @@ def load_data(limit=1000):
     y_data[:, :-1] = x_data[:, 1:]
 
     return (x_data, y_data), voc
+
+
+def load_data_with_title(limit=1000):
+    voc, poems = process_poems('./data/poems.txt', limit=limit)
+    data, _ = word2int(voc, poems)
+    data_size = len(data)
+
+    title = list(map(lambda x: x[0], data))
+    content = list(map(lambda x: x[1], data))
+    max_title_length = max(map(len, title))
+    max_content_length = max(map(len, content))
+
+    x_title = np.full((data_size, max_title_length), voc[TOKEN_EMPTY], np.int32)
+    x_content = np.full((data_size, max_content_length), voc[TOKEN_EMPTY], np.int32)
+
+    for row in range(data_size):
+        x_title[row, :len(title[row])] = title[row]
+        x_content[row, :len(content[row])] = content[row]
+
+    y_content = x_content.copy()
+    y_content[:, :-1] = x_content[:, 1:]
+
+    assert x_title.shape[0] == x_content.shape[0] == y_content.shape[0]
+    assert x_title.shape[1] == max_title_length
+    assert x_content.shape[1] == max_content_length == y_content.shape[1]
+
+    return (x_title, x_content, y_content), voc
+
+
+if __name__ == '__main__':
+    (x_title, x_content, y_content), voc = load_data_with_title(100)
+    print(x_title.shape)
+    print(x_content.shape)
+    print(y_content.shape)
