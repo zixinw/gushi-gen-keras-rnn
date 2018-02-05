@@ -9,12 +9,12 @@ model = load_model('model_title_based.h5')
 
 print(VOC)
 
-title = '春日飞花      '
+title = '初晴落景      '
 title_int = []
 for t in title:
     i = VOC.get(t)
     if i is None:
-        raise '{} is not in VOC'.format(t)
+        raise Exception('{} is not in VOC'.format(t))
     title_int.append(i)
 title_int = np.array([title_int])
 print(title_int)
