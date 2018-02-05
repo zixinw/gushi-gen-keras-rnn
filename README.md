@@ -1,6 +1,5 @@
 # gushi-gen-keras-rnn
-*  Inspiration of   Screenshot-to-code-in-Keras
-
+*  Inspiration of [Screenshot-to-code-in-Keras](https://github.com/emilwallner/Screenshot-to-code-in-Keras)
 ### Basic content generator
 
 img

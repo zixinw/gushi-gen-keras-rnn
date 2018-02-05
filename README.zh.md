@@ -1,5 +1,5 @@
 # gushi-gen-keras-rnn
-*  本项目受`Screenshot-to-code-in-Keras`启发
+*  本项目受[Screenshot-to-code-in-Keras](https://github.com/emilwallner/Screenshot-to-code-in-Keras)启发
 
 ### 传统的文章生成器
 
